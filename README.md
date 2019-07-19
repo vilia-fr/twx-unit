@@ -1,5 +1,7 @@
 # TwxUnit
 
+[![Build Status](https://travis-ci.org/vilia-fr/twxunit.svg?branch=master)](https://travis-ci.org/vilia-fr/twxunit)
+
 TwxUnit is an Apache 2.0-licensed unit testing framework for PTC ThingWorx platform, 
 compatible with JUnit semantics and existing tooling for JUnit 2+. It is the first
 such solution that we are aware of, and as such it is actively developed.
