@@ -1,0 +1,8 @@
+<Entities>
+    <ThingPackages>
+        <ThingPackage className="fr.vilia.twxunit.TwxUnitExecutor" name="TwxUnitExecutor"/>
+    </ThingPackages>
+    <ThingTemplates>
+        <ThingTemplate aspect.isEditableExtensionObject="false" name="TwxUnitExecutor" thingPackage="TwxUnitExecutor"/>
+    </ThingTemplates>
+</Entities>

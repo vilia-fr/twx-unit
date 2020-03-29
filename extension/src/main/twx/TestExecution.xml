@@ -1,0 +1,28 @@
+<Entities>
+    <DataShapes>
+        <DataShape name="TestExecution">
+            <FieldDefinitions>
+                <FieldDefinition aspect.isPrimaryKey="true" baseType="STRING"
+                                 description="Complete test case name, including all parent test suites" name="id"
+                                 ordinal="1"/>
+                <FieldDefinition baseType="STRING" description="Direct test suite name, i.e. thing name"
+                                 name="testSuite" ordinal="2"/>
+                <FieldDefinition baseType="STRING" description="Test case name, i.e. service name" name="testCase"
+                                 ordinal="3"/>
+                <FieldDefinition baseType="STRING" description="Description of the service" name="description"
+                                 ordinal="4"/>
+                <FieldDefinition baseType="STRING" description="Execution result, if any" name="result" ordinal="5"/>
+                <FieldDefinition baseType="STRING"
+                                 description="Execution status, one of the following: Scheduled, Executing, Success, Failure, Aborted, Timeout"
+                                 name="state" ordinal="6"/>
+                <FieldDefinition baseType="USERNAME" description="The user which was used for executing this test case"
+                                 name="runAs" ordinal="7"/>
+                <FieldDefinition baseType="DATETIME" description="When the execution started" name="start" ordinal="8"/>
+                <FieldDefinition baseType="DATETIME" description="When the execution ended or aborted" name="end"
+                                 ordinal="9"/>
+                <FieldDefinition baseType="INTEGER" description="Execution duration in milliseconds" name="duration"
+                                 ordinal="10"/>
+            </FieldDefinitions>
+        </DataShape>
+    </DataShapes>
+</Entities>

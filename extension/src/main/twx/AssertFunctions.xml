@@ -1,0 +1,84 @@
+<Entities>
+    <ScriptFunctionLibraries>
+        <ScriptFunctionLibrary className="fr.vilia.twxunit.AssertScriptLibrary" description="Asserts library"
+                               name="AssertFunctions">
+            <FunctionDefinitions>
+                <FunctionDefinition description="Assert true" name="assertTrue">
+                    <ResultType baseType="NOTHING" description="Nothing" name="result" ordinal="0"/>
+                    <ParameterDefinitions>
+                        <FieldDefinition baseType="BOOLEAN" description="Test value" name="value" ordinal="0"/>
+                        <FieldDefinition baseType="STRING" description="Description (optional)" name="description"
+                                         ordinal="1"/>
+                    </ParameterDefinitions>
+                </FunctionDefinition>
+                <FunctionDefinition description="Assert false" name="assertFalse">
+                    <ResultType baseType="NOTHING" description="Nothing" name="result" ordinal="0"/>
+                    <ParameterDefinitions>
+                        <FieldDefinition baseType="BOOLEAN" description="Test value" name="value" ordinal="0"/>
+                        <FieldDefinition baseType="STRING" description="Description (optional)" name="description"
+                                         ordinal="1"/>
+                    </ParameterDefinitions>
+                </FunctionDefinition>
+                <FunctionDefinition description="Assert equals" name="assertEquals">
+                    <ResultType baseType="NOTHING" description="Nothing" name="result" ordinal="0"/>
+                    <ParameterDefinitions>
+                        <FieldDefinition baseType="STRING" description="Test value 1" name="value" ordinal="0"/>
+                        <FieldDefinition baseType="STRING" description="Test value 2" name="value" ordinal="1"/>
+                        <FieldDefinition baseType="STRING" description="Description (optional)" name="description"
+                                         ordinal="2"/>
+                    </ParameterDefinitions>
+                </FunctionDefinition>
+                <FunctionDefinition description="Assert not equals" name="assertNotEquals">
+                    <ResultType baseType="NOTHING" description="Nothing" name="result" ordinal="0"/>
+                    <ParameterDefinitions>
+                        <FieldDefinition baseType="STRING" description="Test value 1" name="value" ordinal="0"/>
+                        <FieldDefinition baseType="STRING" description="Test value 2" name="value" ordinal="1"/>
+                        <FieldDefinition baseType="STRING" description="Description (optional)" name="description"
+                                         ordinal="2"/>
+                    </ParameterDefinitions>
+                </FunctionDefinition>
+                <FunctionDefinition description="Assert null" name="assertNull">
+                    <ResultType baseType="NOTHING" description="Nothing" name="result" ordinal="0"/>
+                    <ParameterDefinitions>
+                        <FieldDefinition baseType="STRING" description="Test value" name="value" ordinal="0"/>
+                        <FieldDefinition baseType="STRING" description="Description (optional)" name="description"
+                                         ordinal="1"/>
+                    </ParameterDefinitions>
+                </FunctionDefinition>
+                <FunctionDefinition description="Assert not null" name="assertNotNull">
+                    <ResultType baseType="NOTHING" description="Nothing" name="result" ordinal="0"/>
+                    <ParameterDefinitions>
+                        <FieldDefinition baseType="STRING" description="Test value" name="value" ordinal="0"/>
+                        <FieldDefinition baseType="STRING" description="Description (optional)" name="description"
+                                         ordinal="1"/>
+                    </ParameterDefinitions>
+                </FunctionDefinition>
+                <FunctionDefinition description="Assert user/group has permissions to execute some code"
+                                    name="assertHasPermissions">
+                    <ResultType baseType="STRING" description="Anything that the function returns" name="result"
+                                ordinal="0"/>
+                    <ParameterDefinitions>
+                        <FieldDefinition baseType="STRING" description="User or group name" name="principal"
+                                         ordinal="0"/>
+                        <FieldDefinition baseType="STRING" description="Function body to execute" name="function"
+                                         ordinal="1"/>
+                        <FieldDefinition baseType="STRING" description="Description (optional)" name="description"
+                                         ordinal="2"/>
+                    </ParameterDefinitions>
+                </FunctionDefinition>
+                <FunctionDefinition description="Assert user/group has no permissions to execute some code"
+                                    name="assertHasNoPermissions">
+                    <ResultType baseType="NOTHING" description="Nothing" name="result" ordinal="0"/>
+                    <ParameterDefinitions>
+                        <FieldDefinition baseType="STRING" description="User or group name" name="principal"
+                                         ordinal="0"/>
+                        <FieldDefinition baseType="STRING" description="Function body to execute" name="function"
+                                         ordinal="1"/>
+                        <FieldDefinition baseType="STRING" description="Description (optional)" name="description"
+                                         ordinal="2"/>
+                    </ParameterDefinitions>
+                </FunctionDefinition>
+            </FunctionDefinitions>
+        </ScriptFunctionLibrary>
+    </ScriptFunctionLibraries>
+</Entities>

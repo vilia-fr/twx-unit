@@ -1,0 +1,5 @@
+<Entities>
+    <Things>
+        <Thing name="TwxUnit" thingTemplate="TwxUnitExecutor" enabled="true"/>
+    </Things>
+</Entities>

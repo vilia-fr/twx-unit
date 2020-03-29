@@ -1,0 +1,6 @@
+<Entities>
+    <ThingShapes>
+        <ThingShape aspect.isEditableExtensionObject="false" className="fr.vilia.twxunit.HasTestSuite" description=""
+                    name="HasTestSuite"/>
+    </ThingShapes>
+</Entities>

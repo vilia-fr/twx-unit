@@ -1,0 +1,14 @@
+<Entities>
+    <ExtensionPackages>
+        <ExtensionPackage
+                name="${project.name}"
+                description="${project.description}"
+                vendor="${project.organization.name}"
+                packageVersion="${project.version}"
+                minimumThingWorxVersion="7.4.0">
+            <JarResources>
+                <FileResource file="${project.artifactId}-${project.version}.jar" type="JAR"/>
+            </JarResources>
+        </ExtensionPackage>
+    </ExtensionPackages>
+</Entities>
