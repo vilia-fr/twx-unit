@@ -1,0 +1,6 @@
+<Entities>
+    <ThingShapes>
+        <ThingShape aspect.isEditableExtensionObject="false" className="fr.vilia.twxunit.HasRemoteThings" description=""
+                    name="HasRemoteThings"/>
+    </ThingShapes>
+</Entities>

@@ -15,8 +15,10 @@ public class TestSuite {
     private final String name;
     private final List<TestSuite> suites = new ArrayList<>();
     private final List<TestDefinition> testCases = new ArrayList<>();
+    private final TwxUnitExecutor executor; // TODO: Remove
 
-    public TestSuite(String thing, String parent, String runAsDefault, Set<String> parsed) throws TestingException {
+    public TestSuite(TwxUnitExecutor executor, String thing, String parent, String runAsDefault, Set<String> parsed) throws TestingException {
+        this.executor = executor;
         parsed.add(thing);
         this.name = thing;
         Thing t = ThingUtilities.findThing(thing);
@@ -58,7 +60,7 @@ public class TestSuite {
                 if (parsed.contains(testSuite)) {
                     throw new TestingException("Detected an infinite loop on test suite " + testSuite + ", path: " + parsed);
                 }
-                suites.add(new TestSuite(testSuite, thing.getName(), runAs, parsed));
+                suites.add(new TestSuite(executor, testSuite, thing.getName(), runAs, parsed));
             } else {
                 // Reference to test case
                 if (testSuite == null || testSuite.isEmpty()) {

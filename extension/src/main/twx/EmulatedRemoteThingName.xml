@@ -1,0 +1,11 @@
+<Entities>
+    <DataShapes>
+        <DataShape name="EmulatedRemoteThing">
+            <FieldDefinitions>
+                <FieldDefinition baseType="THINGNAME"
+                                 description="Emulated remote thing name"
+                                 name="thingName" />
+            </FieldDefinitions>
+        </DataShape>
+    </DataShapes>
+</Entities>

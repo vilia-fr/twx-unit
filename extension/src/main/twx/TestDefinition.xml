@@ -11,6 +11,9 @@
                 <FieldDefinition baseType="USERNAME"
                                  description="Specifies a default user, under which this test case is executed. Can be overridden by the Run() service parameter."
                                  name="runAs" ordinal="3"/>
+                <FieldDefinition baseType="STRING"
+                                 description="List of remote things that need to be connected before starting this test"
+                                 name="remoteThings" ordinal="4"/>
             </FieldDefinitions>
         </DataShape>
     </DataShapes>

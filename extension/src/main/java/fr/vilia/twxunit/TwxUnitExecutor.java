@@ -2,10 +2,13 @@ package fr.vilia.twxunit;
 
 import ch.qos.logback.classic.Logger;
 import com.thingworx.data.util.InfoTableInstanceFactory;
+import com.thingworx.entities.utils.EntityUtilities;
 import com.thingworx.entities.utils.ThingUtilities;
 import com.thingworx.logging.LogUtilities;
 import com.thingworx.metadata.annotations.*;
 import com.thingworx.persistence.TransactionFactory;
+import com.thingworx.relationships.RelationshipTypes;
+import com.thingworx.security.applicationkeys.ApplicationKey;
 import com.thingworx.security.context.SecurityContext;
 import com.thingworx.things.Thing;
 import com.thingworx.things.connected.RemoteThing;
@@ -16,8 +19,18 @@ import com.thingworx.types.primitives.InfoTablePrimitive;
 import com.thingworx.types.primitives.IntegerPrimitive;
 import com.thingworx.webservices.context.ThreadLocalContext;
 
+import java.io.IOException;
 import java.util.*;
 
+@ThingworxConfigurationTableDefinitions(
+        tables = {@ThingworxConfigurationTableDefinition(
+                name = "LocalClientConfiguration",
+                dataShape = @ThingworxDataShapeDefinition(fields = {
+                        @ThingworxFieldDefinition(name = "url", baseType = "STRING"),
+                        @ThingworxFieldDefinition(name = "appKeyName", baseType = "STRING")
+                })
+        )}
+)
 @ThingworxPropertyDefinitions(properties = {
     @ThingworxPropertyDefinition(name = "isExecuting", baseType = "BOOLEAN"),
     @ThingworxPropertyDefinition(name = "countRemaining", baseType = "INTEGER"),
@@ -82,8 +95,10 @@ public class TwxUnitExecutor extends RemoteThing {
         }).start();
     }
 
+    // TODO: Verify that we don't run beyond 30 seconds (execute sync after sync)
     private void executeSync() {
         TestExecution te;
+        LocalClient localClient = null;
         Set<String> testSuites = new LinkedHashSet<String>();
         while ((te = nextExecutable()) != null) {
             synchronized (executing) {
@@ -92,6 +107,14 @@ public class TwxUnitExecutor extends RemoteThing {
                     for (TestExecution remaining: executing) {
                         if (remaining.getState().equals(ExecutionState.Scheduled) || remaining.getState().equals(ExecutionState.Executing)) {
                             remaining.abort(false, "Abort requested");
+                        }
+                    }
+                    if (localClient != null) {
+                        try {
+                            localClient.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            te.abort(false, "Unexpected error: " + e.getMessage());
                         }
                     }
                     updateProperties();
@@ -116,6 +139,13 @@ public class TwxUnitExecutor extends RemoteThing {
                 if (te.getState().equals(ExecutionState.Scheduled)) {
                     TransactionFactory.beginTransactionRequired();
                     try {
+                        Set<String> remoteThings = te.getRemoteThings();
+                        if (remoteThings != null && !remoteThings.isEmpty()) {
+                            if (localClient == null) {
+                                localClient = new LocalClient(getLocalUrl(), getLocalAppKey());
+                            }
+                            localClient.bind(remoteThings);
+                        }
                         te.execute();
                         updateProperties();
                     } finally {
@@ -143,6 +173,15 @@ public class TwxUnitExecutor extends RemoteThing {
             } catch(Throwable t) {
                 t.printStackTrace();
                 LOG.error("Error while executing After for test suite " + suite + ": " + t.getMessage());
+            }
+        }
+
+        if (localClient != null) {
+            try {
+                localClient.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+                LOG.error("Error while closing local client: " + e.getMessage());
             }
         }
     }
@@ -181,7 +220,14 @@ public class TwxUnitExecutor extends RemoteThing {
 
     private void flattenExecutionRecursive(TestSuite plan, List<TestExecution> list, String prefix) {
         for (TestDefinition td: plan.getTestCases()) {
-            list.add(new TestExecution(prefix + td.getTestCase(), td.getTestSuite(), td.getTestCase(), td.getDescription(), td.getRunAs()));
+            list.add(new TestExecution(
+                    prefix + td.getTestCase(),
+                    td.getTestSuite(),
+                    td.getTestCase(),
+                    td.getDescription(),
+                    td.getRunAs(),
+                    td.getRemoteThings()
+            ));
         }
         for (TestSuite child: plan.getSuites()) {
             flattenExecutionRecursive(child, list, prefix + child.getName() + " > ");
@@ -189,14 +235,14 @@ public class TwxUnitExecutor extends RemoteThing {
     }
 
     private List<TestDefinition> getFlatExecutionPlan(String testSuite, String defaultRunAs) throws TestingException {
-        TestSuite plan = new TestSuite(testSuite, null, defaultRunAs, new TreeSet<String>());
+        TestSuite plan = new TestSuite(this, testSuite, null, defaultRunAs, new TreeSet<String>());
         List<TestDefinition> list = new ArrayList<>();
         flattenPlanRecursive(plan, list);
         return list;
     }
 
     private List<TestExecution> getFlatExecution(String testSuite, String defaultRunAs) throws TestingException {
-        TestSuite plan = new TestSuite(testSuite, null, defaultRunAs, new TreeSet<String>());
+        TestSuite plan = new TestSuite(this, testSuite, null, defaultRunAs, new TreeSet<String>());
         List<TestExecution> list = new ArrayList<>();
         flattenExecutionRecursive(plan, list, testSuite + " > ");
         return list;
@@ -210,6 +256,20 @@ public class TwxUnitExecutor extends RemoteThing {
                 isAborted = true;
                 updateProperties();
             }
+        }
+    }
+
+    String getLocalUrl() {
+        return this.getStringConfigurationSetting("LocalClientConfiguration", "url");
+    }
+
+    String getLocalAppKey() throws Exception {
+        String appKeyName = this.getStringConfigurationSetting("LocalClientConfiguration", "appKeyName");
+        ApplicationKey appKey = (ApplicationKey) EntityUtilities.findEntity(appKeyName, RelationshipTypes.ThingworxRelationshipTypes.ApplicationKey);
+        if (appKey == null) {
+            return null;
+        } else {
+            return appKey.GetKeyID();
         }
     }
 

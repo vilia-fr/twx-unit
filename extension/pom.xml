@@ -5,11 +5,11 @@
 
     <groupId>fr.vilia.twxunit</groupId>
     <artifactId>twxunit-ext</artifactId>
-    <version>2.2.3</version>
+    <version>2.3.11</version>
     <packaging>jar</packaging>
 
     <name>TwxUnit Extension</name>
-    <description>TwxUnit Extension</description>
+    <description>A JUnit4-compatible unit testing framework for ThingWorx</description>
     <organization>
         <name>Vilia</name>
         <url>https://vilia.fr</url>
@@ -25,6 +25,12 @@
             <groupId>org.freeworx.twx</groupId>
             <artifactId>extension-sdk</artifactId>
             <version>8.5.0-b12</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.freeworx.twx</groupId>
+            <artifactId>edge-sdk</artifactId>
+            <version>6.2.0</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

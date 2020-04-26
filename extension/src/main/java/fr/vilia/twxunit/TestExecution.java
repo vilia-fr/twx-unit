@@ -13,6 +13,8 @@ import com.thingworx.types.primitives.StringPrimitive;
 import com.thingworx.webservices.context.ThreadLocalContext;
 import org.joda.time.DateTime;
 
+import java.util.Set;
+
 /**
  * All methods are synchronized.
  */
@@ -23,18 +25,20 @@ public class TestExecution {
     private final String testCase;
     private final String description;
     private final String runAs;
+    private final Set<String> remoteThings;
 
     private String result = null;
     private ExecutionState state = ExecutionState.Scheduled;
     private DateTime start = null;
     private DateTime end = null;
 
-    public TestExecution(String id, String testSuite, String testCase, String description, String runAs) {
+    public TestExecution(String id, String testSuite, String testCase, String description, String runAs, Set<String> remoteThings) {
         this.id = id;
         this.testSuite = testSuite;
         this.testCase = testCase;
         this.description = description;
         this.runAs = runAs;
+        this.remoteThings = remoteThings;
     }
 
     public synchronized void start() {
@@ -157,5 +161,9 @@ public class TestExecution {
                 ", start=" + start +
                 ", end=" + end +
                 '}';
+    }
+
+    public Set<String> getRemoteThings() {
+        return remoteThings;
     }
 }
