@@ -1,14 +1,20 @@
 package fr.vilia.twxunit;
 
 import ch.qos.logback.classic.Logger;
+import com.thingworx.entities.RootEntity;
 import com.thingworx.entities.utils.GroupUtilities;
+import com.thingworx.entities.utils.ThingUtilities;
 import com.thingworx.entities.utils.UserUtilities;
 import com.thingworx.logging.LogUtilities;
 import com.thingworx.security.context.SecurityContext;
 import com.thingworx.security.groups.Group;
 import com.thingworx.security.users.User;
+import com.thingworx.system.entities.ThingWorxEntityManager;
 import com.thingworx.webservices.context.ThreadLocalContext;
 import org.mozilla.javascript.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class AssertScriptLibrary {
 
@@ -194,4 +200,29 @@ public class AssertScriptLibrary {
                 );
         }
     }
+
+    public static void runWithMocks(Context cx, Scriptable me, Object[] args, Function func) throws Exception {
+        Function function = (Function) args[0];
+        Map<String, String> mocksList = (Map<String, String>) args[1];
+        Map<String, Map<String, RootEntity>> originalEntities = new HashMap<>();
+        try {
+            mocksList.forEach((thingName, mock) -> {
+                ThingWorxEntityManager.getInstance().getEntityManagers().forEach((managerName, manager) -> {
+                    originalEntities.putIfAbsent(managerName, new HashMap<>());
+                    if (manager.getEntityCollection().containsKey(thingName)) {
+                        originalEntities.get(managerName).put(thingName, manager.getEntityCollection().get(thingName));
+                        manager.getEntityCollection().put(thingName, ThingUtilities.findThing(mock));
+                    }
+                });
+            });
+            function.call(cx, func.getParentScope(), me, new Object[0]);
+        } finally {
+            originalEntities.forEach((managerName, entityMap) -> {
+                entityMap.forEach((entityName, entity) -> {
+                    ThingWorxEntityManager.getInstance().getEntityManagerByEntityCollectionName(managerName).getEntityCollection().put(entityName, entity);
+                });
+            });
+        }
+    }
+
 }

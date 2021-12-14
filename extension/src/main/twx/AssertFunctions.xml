@@ -78,6 +78,16 @@
                                          ordinal="2"/>
                     </ParameterDefinitions>
                 </FunctionDefinition>
+                <FunctionDefinition description="Run the test with mocks"
+                                    name="runWithMocks">
+                    <ResultType baseType="NOTHING" description="Nothing" name="result" ordinal="0"/>
+                    <ParameterDefinitions>
+                        <FieldDefinition baseType="STRING" description="Function body to execute" name="function"
+                                         ordinal="0"/>
+                        <FieldDefinition baseType="STRING" description="Map of original entity to mock thing names" name="entityMapping"
+                                         ordinal="1"/>
+                    </ParameterDefinitions>
+                </FunctionDefinition>
             </FunctionDefinitions>
         </ScriptFunctionLibrary>
     </ScriptFunctionLibraries>

@@ -33,6 +33,23 @@ assertHasPermissions("System", function() {
 }, "System user can't get the list of files");
 ``` 
 
+or even this:
+
+```javascript
+// -- ImporterTestSuite.TestPurging()
+// Mocks SystemRepository to test data purging
+
+runWithMocks(function() {
+    // All references to SystemRepository here (including nested calls) will be replaced
+    // by MockSystemRepository thing, which defines a dummy set of services 
+    Things["MockSystemRepository"].InitializeWithTestData();  
+    Things["DataPurger"].DeleteAllFilesFromSystemRepository();
+    assertEquals(
+         Things["MockSystemRepository"].GetFiles().rows.length, 0, 
+         "Some files were not deleted");
+}, {"SystemRepository": "MockSystemRepository"});
+``` 
+
 (see more examples below)
 
 It is originally developed and actively maintained by [Vilia](http://vilia.fr) as part 
@@ -77,7 +94,7 @@ test suites *today* is via `TwxUnit` thing in ThingWorx Composer (see below).
 ### Installation on ThingWorx (mandatory)
 
 Check out this project or simply download the ZIP file with extension package (the 
-latest version is [twxunit-ext-2.3.11.zip](https://github.com/vilia-fr/twx-unit/files/4535595/twxunit-ext-2.3.11.zip))
+latest version is [twxunit-ext-2.4.1.zip](https://github.com/vilia-fr/twx-unit/files/4535595/twxunit-ext-2.4.1.zip))
 
 In ThingWorx Composer go to Import/Export > IMPORT > Extension, choose the ZIP file
 and click *Import*. That's all, you can start using TwxUnit now (see examples below).
@@ -330,6 +347,41 @@ successfully. Default implementations of `Before` and `After` are empty.
 
 **BUG:** On ThingWorx 8.5 `After` is not executed if the script times out, or when the execution is aborted via
 `Abort()` service.
+
+## Using mocks
+
+To reduce side effects and performance degradation, it is often useful to replace "external" dependencies
+with lightweight mocks. For example, if you are testing the code, which generates a report and sends an email,
+you probably want to avoid sending the actual email, but test the report generating logic instead. Some of the 
+typical mock candidates are:
+
+- File repositories
+- Streams and data tables
+- External systems and connectors
+- FileTransferSubsystem, AuditSubsystem, etc.
+
+TwxUnit allows you to temporarily replace an entity with another one in runtime. A typical way to mock a file 
+repository would be to create a GenericThing (e.g. `MockSystemRepository`) and define the services, which mimic
+the real repo, but without accessing the actual filesystem. For example, you can define a service like 
+`GetFileListingWithLinks`, which returns a pre-defined list of "files", or the value of a property like `me.files`.
+
+Then you need to specify the mapping between original and mock entity names and use `runWithMocks` script:
+
+```javascript
+runWithMocks(function() {
+    let files = Things["SystemRepository"].GetFileListingWithLinks({ path: '/' });
+    // This becomes: Things["MockSystemRepository"].GetFileListingWithLinks({ path: '/' });
+    // Also, if you call a service, which calls another service, which uses SystemRepository,
+    // it also gets replaced with MockSystemRepository.
+}, {"SystemRepository": "MockSystemRepository"});
+```
+
+This entity replacement has system-wide scope, so you may have undesirable side effects if you try to run
+several tests in parallel. Avoid doing it.
+
+**WARNING:** If your test times out, it will leave the platform in inconsistent state, with the entities
+being replaced permanently. The only way to fix it is to restart Tomcat. Make sure your services do not
+time out.
 
 ## Timeouts and async mode
 

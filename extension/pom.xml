@@ -5,7 +5,7 @@
 
     <groupId>fr.vilia.twxunit</groupId>
     <artifactId>twxunit-ext</artifactId>
-    <version>2.3.11</version>
+    <version>2.4.1</version>
     <packaging>jar</packaging>
 
     <name>TwxUnit Extension</name>
@@ -16,8 +16,8 @@
     </organization>
 
     <properties>
-        <maven.compiler.source>1.7</maven.compiler.source>
-        <maven.compiler.target>1.7</maven.compiler.target>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
 
     <dependencies>
@@ -32,6 +32,13 @@
             <artifactId>edge-sdk</artifactId>
             <version>6.2.0</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.twx.platform</groupId>
+            <artifactId>thingworx</artifactId>
+            <version>9.2.3</version>
+            <scope>system</scope>
+            <systemPath>/home/w/usr/twx-platform-9.2/thingworx-platform-common-9.2.3-b189.jar</systemPath>
         </dependency>
     </dependencies>
 
