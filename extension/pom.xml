@@ -20,25 +20,48 @@
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
 
+    <repositories>
+        <repository>
+            <id>local-repo</id>
+            <url>file://${project.basedir}/lib</url>
+        </repository>
+    </repositories>
+    
     <dependencies>
         <dependency>
-            <groupId>org.freeworx.twx</groupId>
-            <artifactId>extension-sdk</artifactId>
-            <version>8.5.0-b12</version>
-            <scope>provided</scope>
+            <groupId>twx</groupId>
+            <artifactId>twx-ext-thingworx-ext-sdk</artifactId>
+            <version>9.0</version>
         </dependency>
         <dependency>
-            <groupId>org.freeworx.twx</groupId>
-            <artifactId>edge-sdk</artifactId>
-            <version>6.2.0</version>
-            <scope>provided</scope>
+            <groupId>twx</groupId>
+            <artifactId>twx-ext-rhino</artifactId>
+            <version>9.0</version>
         </dependency>
         <dependency>
-            <groupId>com.twx.platform</groupId>
-            <artifactId>thingworx</artifactId>
-            <version>9.2.3</version>
-            <scope>system</scope>
-            <systemPath>/home/w/usr/twx-platform-9.2/thingworx-platform-common-9.2.3-b189.jar</systemPath>
+            <groupId>twx</groupId>
+            <artifactId>twx-ext-joda-time</artifactId>
+            <version>9.0</version>
+        </dependency>
+        <dependency>
+            <groupId>twx</groupId>
+            <artifactId>twx-ext-logback-core</artifactId>
+            <version>9.0</version>
+        </dependency>
+        <dependency>
+            <groupId>twx</groupId>
+            <artifactId>twx-ext-logback-classic</artifactId>
+            <version>9.0</version>
+        </dependency>
+        <dependency>
+            <groupId>twx</groupId>
+            <artifactId>twx-ext-slf4j-api</artifactId>
+            <version>9.0</version>
+        </dependency>
+        <dependency>
+            <groupId>twx</groupId>
+            <artifactId>twx-ext-thingworx-platform-common</artifactId>
+            <version>9.0</version>
         </dependency>
     </dependencies>
 

@@ -77,7 +77,7 @@ average ThingWorx developer to understand inner workings
 
 ## System requirements
 
-TwxUnit was tested against ThingWorx 7.4, 8.4 and 8.5, although it should work with other 
+TwxUnit was tested against ThingWorx 7.4, 8.4, 8.5, 9.0 and 9.3 although it should work with other 
 versions just as well.
 
 On Java side (optional) it requires Java 1.6 and JUnit 2, 3, 4 or 5 with `junit-vintage-engine` 
@@ -345,8 +345,8 @@ See an example above. If `Before` fails with an exception, the rest of the execu
 fails, the execution continues. `After` works like `finally`, it will be always executed if `Before` executed
 successfully. Default implementations of `Before` and `After` are empty.
 
-**BUG:** On ThingWorx 8.5 `After` is not executed if the script times out, or when the execution is aborted via
-`Abort()` service.
+**BUG:** On ThingWorx 8.5 (and probably 9.x, too) `After` is not executed if the script times out, or when the 
+execution is aborted via `Abort()` service.
 
 ## Using mocks
 
@@ -507,17 +507,32 @@ accidentally become part of production codebase;
 ThingWorx doesn't allow to hide exceptions, always appending them to the Script log
 no matter what, therefore you will find errors in `ScriptLog` for every failed assert. 
 
-**TODO:** Validate it for 8.5.
+**TODO:** Validate it for 9.x.
 
 ## Building and extending TwxUnit
 
-TwxUnit is built using Maven. It relies on twx-maven to load ThingWorx Extension SDK to the local
-Maven repository. Once you installed the SDK, building TwxUnit is trivial -- just execute 
-`mvn package`.
+TwxUnit is built using Maven. It relies on the ThingWorx Extension SDK installed in a local Maven repository. 
+
+The building preparation process is therefore a bit involved due to the fact that ThingWorx Extension SDK is 
+not available in public Maven repositories. Luckily you need to configure it only once.
+
+1. Download ThingWorx Extension SDK 9.0. The version is important.
+2. Unzip it into `extension/ext-sdk` directory.
+3. Extract `thingworx-platform-common-xxx.jar` file from your ThingWorx installation and copy it into the same 
+`extension/ext-sdk` directory. The specific version is not important here, you can take the file from ThingWorx 
+9.0 or 9.3, for example. This step is not recommended by official extension guide(s), but is required to access
+`ThingWorxEntityManager` facility, not exposed via the SDK.
+4. Go to `extensions` directory and execute `./init-maven-repo.sh` bash script. You can use Git Bash for that. 
+This script will create a new local Maven repo in `extension/lib` directory add will all all JAR files from 
+`ext-sdk` to this repo.
+
+Once the last step executes successfully, you can check that you have a `lib/twx` directory, which contains a
+bunch of subdirectories whose names corrspond to the individual SDK files.
+
+Once you "installed" the SDK in a local Maven repo, building TwxUnit is trivial -- just execute `mvn package`.
+You will find the zipped extension package in the `target` directory.
 
 Pull requests are welcome!
-
-**TODO:** Link to twx-maven repo.
 
 ## Testing TwxUnit
 

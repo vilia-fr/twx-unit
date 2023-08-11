@@ -22,9 +22,4 @@
             <outputDirectory>/</outputDirectory>
         </file>
     </files>
-    <dependencySets>
-        <dependencySet>
-            <outputDirectory>/lib/common</outputDirectory>
-        </dependencySet>
-    </dependencySets>
 </assembly>
